@@ -1,4 +1,5 @@
 #!/bin/bash
+$principaldomaine = "mondomaine.fr"
 
 function cert(){
         echo "---------------------------"
@@ -37,7 +38,7 @@ function precertification(){
         if [[ $doma ]]
         then
                 echo "Sous domaine: "$doma
-                certification=$doma".domaine.fr"
+                certification=$doma"."$principaldomaine
                 echo "Domaine à certifier: "$certification
                 cert $certification
         else
@@ -56,7 +57,7 @@ function addproxy(){
         echo -e "\n\n"
         echo "Ecriture dans le fichier de configuration: $3"
         proxyconf="server {"
-        proxyconf="$proxyconf\n         server_name $1.domaine.fr;"
+        proxyconf="$proxyconf\n         server_name $1.$principaldomaine;"
         proxyconf="$proxyconf\n"
         proxyconf="$proxyconf\n         access_log /var/log/nginx/$4/https.access.log;"
         proxyconf="$proxyconf\n         error_log /var/log/nginx/$4/https.error.log;"
@@ -70,12 +71,12 @@ function addproxy(){
         proxyconf="$proxyconf\n}"
         echo "Configuration port 443 ok"
         proxyconf+="\n\nserver {"
-        proxyconf+="\n  if (\$host = $1.domaine.fr) {"
+        proxyconf+="\n  if (\$host = $1.$principaldomaine) {"
         proxyconf+="\n          return 301 https://\$host\$request_uri;"
         proxyconf+="\n  }"
         proxyconf+="\n"
         proxyconf+="\n  listen 80;"
-        proxyconf+="\n  server_name $1.domaine.fr;"
+        proxyconf+="\n  server_name $1.$principaldomaine;"
         proxyconf+="\n  return 404;"
         proxyconf+="\n}"
         echo "Configuration redirection port 80 Ok"
