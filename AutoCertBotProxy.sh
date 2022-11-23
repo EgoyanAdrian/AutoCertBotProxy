@@ -82,10 +82,13 @@ function addproxy(){
         echo "Configuration redirection port 80 Ok"
 
         echo -e $proxyconf >> /etc/nginx/sites-available/$3
-
+        if [[ $5 == "-c" || $6 == "-c" ]];then
+        certification $2
+        fi
+        if [[ $5 == "-r" || $6 == "-r" ]];then
         echo "Redemarage service nginx"
         systemctl restart nginx
-        certification $2
+        fi
 }
 
 function help(){
@@ -100,7 +103,9 @@ function help(){
         echo "                     Ip et port forme ip:port"
         echo "                     fichier de destination"
         echo "                     chemin des log (path racine /nginx"
-        echo "          ex: ./certbot.sh --proxy exemple 127.0.0.1 domaine.com exemple"
+        echo "          Attribut: -r (restart service) optionnel"
+        echo "                    -c (certification domaine) optionnel"
+        echo "          ex: ./certbot.sh --proxy exemple 127.0.0.1 domaine.conf exemple -c"
 }
 function proxy(){
         if [[ "$#" -eq 4 ]];then
