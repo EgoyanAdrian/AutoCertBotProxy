@@ -114,6 +114,16 @@ function proxy(){
         help
         fi
 }
+function show(){
+        if [[ -z $1 ]];then
+        echo $(ls /etc/nginx/sites-available/)
+        elif [[ -n $1 ]];then
+        cat /etc/nginx/sites-available/$1 | while  read ligne ; do
+                echo $ligne
+        done
+        echo $()
+        fi
+}
 
 case $1 in
 -a | --add)
